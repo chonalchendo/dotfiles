@@ -1,0 +1,19 @@
+# OS files
+.DS_Store
+*.swp
+*.swo
+
+# Neovim
+nvim/.config/nvim/lazy-lock.json
+nvim/.config/nvim/plugin/
+
+# Sensitive files (add as needed)
+*.local
+.env
+
+# Tmux plugins (managed by tpm)
+tmux/.tmux/
+
+# ZSH cache
+zsh/.zcompdump*
+zsh/.zsh_history
