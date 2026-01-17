@@ -1,16 +1,18 @@
 # =============================================================================
-# STARSHIP PROMPT - Minimal & Fast
+# STARSHIP PROMPT - Pastel Catppuccin Theme
 # =============================================================================
 # Docs: https://starship.rs/config/
 
 add_newline = false
 command_timeout = 1000
 
-# Minimal left prompt: directory + character
-format = """$directory$character"""
+# Two-line prompt: info on first line, character on second
+format = """
+$directory$git_branch$git_status$git_metrics$git_state
+$character"""
 
-# Everything else on the right
-right_format = """$all"""
+# Right side: languages, env, system info
+right_format = """$python$nodejs$rust$golang$lua$docker_context$env_var_OPENAI_API_KEY$env_var_ANTHROPIC_API_KEY$status$memory_usage$cmd_duration$time"""
 
 # Use Catppuccin Mocha palette
 palette = "catppuccin_mocha"
@@ -19,9 +21,9 @@ palette = "catppuccin_mocha"
 # PROMPT CHARACTER
 # =============================================================================
 [character]
-success_symbol = '[>](bold green)'
-error_symbol = '[>](bold red)'
-vimcmd_symbol = '[<](bold mauve)'
+success_symbol = '[>](green)'
+error_symbol = '[>](maroon)'
+vimcmd_symbol = '[<](lavender)'
 
 # =============================================================================
 # DIRECTORY
@@ -29,9 +31,9 @@ vimcmd_symbol = '[<](bold mauve)'
 [directory]
 truncation_length = 3
 truncate_to_repo = true
-style = "bold lavender"
+style = "lavender"
 read_only = " "
-read_only_style = "red"
+read_only_style = "maroon"
 
 # =============================================================================
 # GIT
@@ -39,14 +41,14 @@ read_only_style = "red"
 [git_branch]
 format = '[$symbol$branch(:$remote_branch)]($style) '
 symbol = " "
-style = "bold mauve"
+style = "pink"
 
 [git_status]
 format = '([$all_status$ahead_behind]($style) )'
-style = "bold pink"
+style = "flamingo"
 conflicted = "="
 ahead = "[+${count}](green)"
-behind = "[-${count}](red)"
+behind = "[-${count}](maroon)"
 diverged = "[+${ahead_count}/-${behind_count}](yellow)"
 untracked = "?"
 stashed = "$"
@@ -55,83 +57,123 @@ staged = "+"
 renamed = ">"
 deleted = "x"
 
+[git_metrics]
+disabled = false
+format = '([+$added]($added_style))([-$deleted]($deleted_style) )'
+added_style = "green"
+deleted_style = "maroon"
+only_nonzero_diffs = true
+
 [git_state]
-format = '[\($state( $progress_current of $progress_total)\)]($style) '
-style = "bold yellow"
+format = '\([$state( $progress_current of $progress_total)]($style)\) '
+style = "yellow"
+
+# =============================================================================
+# PYTHON - Show version and virtualenv
+# =============================================================================
+[python]
+format = '[$symbol$version( \($virtualenv\))]($style) '
+symbol = " "
+style = "yellow"
+pyenv_version_name = true
+detect_extensions = ["py"]
+detect_files = ["requirements.txt", "pyproject.toml", ".python-version", "Pipfile", "setup.py", "uv.lock"]
+detect_folders = [".venv", "venv", ".virtualenv"]
 
 # =============================================================================
 # LANGUAGES & TOOLS
 # =============================================================================
-[python]
-format = '[$symbol($virtualenv )]($style)'
-symbol = " "
-style = "bold yellow"
-
 [nodejs]
-format = '[$symbol($version )]($style)'
+format = '[$symbol$version]($style) '
 symbol = " "
-style = "bold green"
+style = "green"
 
 [rust]
-format = '[$symbol($version )]($style)'
+format = '[$symbol$version]($style) '
 symbol = " "
-style = "bold peach"
+style = "peach"
 
 [golang]
-format = '[$symbol($version )]($style)'
+format = '[$symbol$version]($style) '
 symbol = " "
-style = "bold sky"
+style = "sky"
 
 [lua]
-format = '[$symbol($version )]($style)'
+format = '[$symbol$version]($style) '
 symbol = " "
-style = "bold blue"
+style = "blue"
 
 [docker_context]
 format = '[$symbol$context]($style) '
 symbol = " "
-style = "bold sky"
-disabled = true
+style = "sky"
+only_with_files = true
+detect_files = ["docker-compose.yml", "docker-compose.yaml", "Dockerfile"]
+
+# =============================================================================
+# AI WORKFLOW - API Key Indicators
+# =============================================================================
+[env_var.OPENAI_API_KEY]
+format = '[󰧑 ](teal)'
+variable = "OPENAI_API_KEY"
+
+[env_var.ANTHROPIC_API_KEY]
+format = '[󰛄 ](mauve)'
+variable = "ANTHROPIC_API_KEY"
+
+# =============================================================================
+# SYSTEM MONITORING
+# =============================================================================
+[memory_usage]
+disabled = false
+threshold = 50
+format = '[$symbol$ram_pct]($style) '
+symbol = "󰍛 "
+style = "peach"
+
+[cmd_duration]
+min_time = 2000
+format = '[$duration]($style) '
+style = "mauve"
+show_milliseconds = false
+
+[status]
+disabled = false
+format = '[$symbol$status]($style) '
+symbol = " "
+style = "maroon"
+
+[time]
+disabled = false
+format = '[$time]($style)'
+style = "subtext0"
+time_format = "%H:%M"
+
+[jobs]
+symbol = " "
+style = "blue"
+threshold = 1
 
 # =============================================================================
 # CLOUD & INFRA
 # =============================================================================
 [aws]
-format = '[$symbol($profile )(\($region\) )]($style)'
+format = '[$symbol($profile )(\($region\))]($style) '
 symbol = " "
-style = "bold peach"
-disabled = false
+style = "peach"
+disabled = true
 
 [kubernetes]
 format = '[$symbol$context( \($namespace\))]($style) '
 symbol = "󱃾 "
-style = "bold blue"
+style = "blue"
 disabled = true
 detect_files = ['Dockerfile', 'k8s', 'kubernetes']
 
 [terraform]
 format = '[$symbol$workspace]($style) '
 symbol = "󱁢 "
-style = "bold mauve"
-
-# =============================================================================
-# SYSTEM
-# =============================================================================
-[cmd_duration]
-min_time = 2000
-format = '[$duration]($style) '
-style = "bold yellow"
-
-[jobs]
-symbol = " "
-style = "bold blue"
-threshold = 1
-
-[time]
-disabled = true
-format = '[$time]($style) '
-style = "bold overlay1"
-time_format = "%H:%M"
+style = "mauve"
 
 # =============================================================================
 # DISABLED MODULES (for cleaner prompt)
