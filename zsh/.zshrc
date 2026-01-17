@@ -144,3 +144,108 @@ eval "$(zoxide init zsh)"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# =============================================================================
+# FZF CONFIGURATION
+# =============================================================================
+# Set up fzf key bindings and fuzzy completion
+source <(fzf --zsh)
+
+# Use Catppuccin Mocha colors for fzf
+export FZF_DEFAULT_OPTS=" \
+--color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
+--color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
+--color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8 \
+--color=selected-bg:#45475a \
+--multi"
+
+# =============================================================================
+# EDITOR
+# =============================================================================
+export EDITOR="nvim"
+export VISUAL="nvim"
+
+# =============================================================================
+# AI DEVELOPMENT ALIASES
+# =============================================================================
+alias oc="opencode"
+alias cc="claude"
+alias v="nvim"
+alias lg="lazygit"
+
+# =============================================================================
+# AI DEVELOPMENT FUNCTIONS
+# =============================================================================
+
+# Create a new AI development tmux session with predefined layout
+# Usage: aidev <session-name> [project-directory]
+aidev() {
+  local session_name="${1:-ai-dev}"
+  local project_dir="${2:-.}"
+  
+  # Resolve to absolute path
+  project_dir=$(cd "$project_dir" && pwd)
+  
+  # Check if session already exists
+  if tmux has-session -t "$session_name" 2>/dev/null; then
+    echo "Session '$session_name' already exists. Attaching..."
+    tmux attach-session -t "$session_name"
+    return
+  fi
+  
+  # Create new session with nvim in first window
+  tmux new-session -d -s "$session_name" -c "$project_dir"
+  tmux rename-window -t "$session_name:1" "nvim"
+  tmux send-keys -t "$session_name:1" "nvim" Enter
+  
+  # Create windows for agents
+  tmux new-window -t "$session_name" -n "agent-1" -c "$project_dir"
+  tmux new-window -t "$session_name" -n "agent-2" -c "$project_dir"
+  tmux new-window -t "$session_name" -n "shell" -c "$project_dir"
+  
+  # Go back to nvim window and attach
+  tmux select-window -t "$session_name:1"
+  tmux attach-session -t "$session_name"
+}
+
+# List all running agent windows across all tmux sessions
+agents() {
+  echo "=== Running AI Agents ==="
+  tmux list-windows -a 2>/dev/null | grep -E "(opencode|claude|agent)" || echo "No agents running"
+}
+
+# Quick switch to or create a project session
+# Usage: proj <project-name>
+proj() {
+  local project_name="$1"
+  
+  if [[ -z "$project_name" ]]; then
+    # No argument - show session picker
+    tmux list-sessions -F '#{session_name}' 2>/dev/null | \
+      fzf --reverse --header='Select Session' | \
+      xargs -I {} tmux switch-client -t {}
+    return
+  fi
+  
+  # Check if session exists
+  if tmux has-session -t "$project_name" 2>/dev/null; then
+    tmux switch-client -t "$project_name"
+  else
+    echo "Session '$project_name' not found. Create with: aidev $project_name"
+  fi
+}
+
+# Kill all agent windows (useful for cleanup)
+kill-agents() {
+  echo "Killing all agent windows..."
+  tmux list-windows -a -F '#{session_name}:#{window_index} #{window_name}' 2>/dev/null | \
+    grep -E "(opencode|claude)" | \
+    cut -d' ' -f1 | \
+    xargs -I {} tmux kill-window -t {}
+  echo "Done."
+}
+
+# Dotfiles management
+dots() {
+  cd ~/dotfiles && nvim
+}
