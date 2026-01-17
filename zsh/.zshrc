@@ -151,13 +151,20 @@ export NVM_DIR="$HOME/.nvm"
 # Set up fzf key bindings and fuzzy completion
 source <(fzf --zsh)
 
-# Use Catppuccin Mocha colors for fzf
+# Pastel Catppuccin colors for fzf
 export FZF_DEFAULT_OPTS=" \
---color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
---color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
---color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8 \
+--color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f5c2e7 \
+--color=fg:#cdd6f4,header:#f5c2e7,info:#cba6f7,pointer:#f5e0dc \
+--color=marker:#a6e3a1,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f5c2e7 \
 --color=selected-bg:#45475a \
+--color=border:#b4befe,label:#cba6f7 \
+--border=rounded --padding=1 \
+--prompt='  ' --pointer='󰁕' --marker='󰄬' \
 --multi"
+
+# fzf preview settings
+export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:500 {} 2>/dev/null || cat {}'"
+export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always --icons {} | head -200'"
 
 # =============================================================================
 # EDITOR
@@ -166,12 +173,66 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 
 # =============================================================================
-# AI DEVELOPMENT ALIASES
+# PASTEL COLORS FOR LS/EZA
 # =============================================================================
+# Use pastel colors with eza
+export EZA_COLORS="da=38;5;183:di=38;5;117:ex=38;5;156:fi=38;5;252:ln=38;5;219:ur=38;5;223:uw=38;5;210:ux=38;5;156:gr=38;5;223:gw=38;5;210:gx=38;5;156:tr=38;5;223:tw=38;5;210:tx=38;5;156"
+
+# =============================================================================
+# COOL ZSH FEATURES
+# =============================================================================
+# Better history
+HISTSIZE=50000
+SAVEHIST=50000
+setopt EXTENDED_HISTORY       # Write timestamp to history
+setopt HIST_EXPIRE_DUPS_FIRST # Expire duplicate entries first
+setopt HIST_IGNORE_DUPS       # Don't record duplicates
+setopt HIST_IGNORE_SPACE      # Don't record commands starting with space
+setopt HIST_VERIFY            # Show command before executing from history
+setopt SHARE_HISTORY          # Share history between sessions
+
+# Better navigation
+setopt AUTO_CD                # cd by just typing directory name
+setopt AUTO_PUSHD             # Push directories to stack
+setopt PUSHD_IGNORE_DUPS      # Don't push duplicates
+setopt PUSHD_SILENT           # Don't print stack after pushd/popd
+
+# Better completion
+setopt COMPLETE_IN_WORD       # Complete from cursor position
+setopt ALWAYS_TO_END          # Move cursor to end after completion
+setopt MENU_COMPLETE          # Auto-select first match
+
+# =============================================================================
+# ALIASES
+# =============================================================================
+# AI Development
 alias oc="opencode"
 alias cc="claude"
 alias v="nvim"
 alias lg="lazygit"
+
+# Better defaults with pastel colors
+alias cat="bat --style=plain --paging=never"
+alias less="bat --style=plain"
+alias tree="eza --tree --icons --color=always"
+alias ll="eza -la --icons --color=always --group-directories-first"
+alias la="eza -a --icons --color=always --group-directories-first"
+
+# Git shortcuts
+alias gs="git status"
+alias gd="git diff"
+alias gl="git log --oneline --graph --decorate -10"
+alias gp="git pull"
+alias gc="git commit"
+
+# Quick navigation
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+
+# Misc
+alias c="clear"
+alias reload="source ~/.zshrc"
 
 # =============================================================================
 # AI DEVELOPMENT FUNCTIONS
