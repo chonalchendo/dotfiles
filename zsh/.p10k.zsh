@@ -372,12 +372,12 @@
     fi
 
     if (( $1 )); then
-      # Styling for up-to-date Git status.
+      # Styling for up-to-date Git status. (Catppuccin pastel colors)
       local       meta='%f'     # default foreground
-      local      clean='%76F'   # green foreground
-      local   modified='%178F'  # yellow foreground
-      local  untracked='%39F'   # blue foreground
-      local conflicted='%196F'  # red foreground
+      local      clean='%218F'  # flamingo/pink foreground
+      local   modified='%216F'  # peach foreground
+      local  untracked='%183F'  # mauve foreground
+      local conflicted='%210F'  # maroon/red foreground
     else
       # Styling for incomplete and stale Git status.
       local       meta='%244F'  # grey foreground
@@ -489,8 +489,8 @@
   # Enable counters for staged, unstaged, etc.
   typeset -g POWERLEVEL9K_VCS_{STAGED,UNSTAGED,UNTRACKED,CONFLICTED,COMMITS_AHEAD,COMMITS_BEHIND}_MAX_NUM=-1
 
-  # Icon color.
-  typeset -g POWERLEVEL9K_VCS_VISUAL_IDENTIFIER_COLOR=76
+  # Icon color. (Catppuccin Flamingo - pastel pink/red)
+  typeset -g POWERLEVEL9K_VCS_VISUAL_IDENTIFIER_COLOR=218
   typeset -g POWERLEVEL9K_VCS_LOADING_VISUAL_IDENTIFIER_COLOR=244
   # Custom icon.
   typeset -g POWERLEVEL9K_VCS_VISUAL_IDENTIFIER_EXPANSION=
@@ -504,8 +504,8 @@
 
   # These settings are used for repositories other than Git or when gitstatusd fails and
   # Powerlevel10k has to fall back to using vcs_info.
-  # Catppuccin pastel colors: Green for clean, Peach for modified
-  typeset -g POWERLEVEL9K_VCS_CLEAN_FOREGROUND=120
+  # Catppuccin pastel colors: Flamingo (pink) for clean, Peach for modified
+  typeset -g POWERLEVEL9K_VCS_CLEAN_FOREGROUND=218
   typeset -g POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND=183
   typeset -g POWERLEVEL9K_VCS_MODIFIED_FOREGROUND=216
 
