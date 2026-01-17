@@ -28,13 +28,13 @@ return {
 			-- list of servers for mason to install
 			ensure_installed = {
 				"lua_ls",
-				-- "pyright",
-				-- "basedpyright", -- replaced by ty
 				"ruff",
 				"rust_analyzer",
 			},
-			-- auto-install configured servers (with lspconfig)
-			automatic_installation = true, -- not the same as ensure_installed
+			-- Disable automatic setup - we configure LSPs manually in lspconfig.lua
+			automatic_installation = false,
+			-- Don't auto-setup handlers - we use vim.lsp.config/enable in lspconfig.lua
+			handlers = {},
 		})
 
 		mason_tool_installer.setup({

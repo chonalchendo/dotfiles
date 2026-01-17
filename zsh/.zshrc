@@ -1,8 +1,9 @@
-# Enable Powerlevel10k instant prompt. Should stay close to 
-# the top of ~/.zshrc.
+# Enable Powerlevel10k instant prompt (only when not using Starship)
+# Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+USE_STARSHIP=true  # Duplicated here for instant prompt check
+if [[ "$USE_STARSHIP" != "true" ]] && [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
@@ -119,18 +120,29 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# =============================================================================
+# PROMPT - Choose between Starship (modern/minimal) or Powerlevel10k (feature-rich)
+# =============================================================================
+# Set USE_STARSHIP=true to use Starship, false for Powerlevel10k
+USE_STARSHIP=true
 
+if [[ "$USE_STARSHIP" == "true" ]]; then
+  # Starship - minimal, fast, modern
+  eval "$(starship init zsh)"
+  export STARSHIP_CONFIG=~/.config/starship/starship.toml
+else
+  # Powerlevel10k - feature-rich, customizable
+  # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+  [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+  source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
+fi
 
 alias python=/Users/conal/.pyenv/shims/python3
 alias pip=/Users/conal/.pyenv/shims/pip3
 
-
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
-source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
 
 alias ls="eza --color=always --long --no-filesize --icons=always --no-time --no-user --no-permissions"
 
@@ -310,3 +322,110 @@ kill-agents() {
 dots() {
   cd ~/dotfiles && nvim
 }
+
+# =============================================================================
+# ATUIN - AI-POWERED SHELL HISTORY
+# =============================================================================
+eval "$(atuin init zsh)"
+
+# =============================================================================
+# DIRENV - PER-DIRECTORY ENVIRONMENT
+# =============================================================================
+eval "$(direnv hook zsh)"
+
+# =============================================================================
+# BETTER ZSH KEYBINDINGS
+# =============================================================================
+bindkey '^w' autosuggest-execute      # Ctrl+w executes suggestion
+bindkey '^e' autosuggest-accept       # Ctrl+e accepts suggestion
+bindkey '^k' up-line-or-search        # Ctrl+k for history up
+bindkey '^j' down-line-or-search      # Ctrl+j for history down
+
+# =============================================================================
+# NAVIGATION FUNCTIONS
+# =============================================================================
+# cd + list directory
+cx() { cd "$@" && ll; }
+
+# Fuzzy cd into directory
+fcd() { cd "$(find . -type d -not -path '*/.*' | fzf --preview 'eza --tree --color=always --icons {} | head -100')" && ll; }
+
+# Fuzzy file path to clipboard
+f() { echo "$(find . -type f -not -path '*/.*' | fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}')" | pbcopy && echo "Path copied to clipboard"; }
+
+# Fuzzy open file in nvim
+fv() { nvim "$(find . -type f -not -path '*/.*' | fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}')"; }
+
+# Ranger-style directory navigation (cd on quit)
+function ranger {
+  local IFS=$'\t\n'
+  local tempfile="$(mktemp -t tmp.XXXXXX)"
+  local ranger_cmd=(
+    command
+    ranger
+    --cmd="map Q chain shell echo %d > "$tempfile"; quitall"
+  )
+  ${ranger_cmd[@]} "$@"
+  if [[ -f "$tempfile" ]] && [[ "$(cat -- "$tempfile")" != "$(echo -n `pwd`)" ]]; then
+    cd -- "$(cat "$tempfile")" || return
+  fi
+  command rm -f -- "$tempfile" 2>/dev/null
+}
+alias rr='ranger'
+
+# =============================================================================
+# GIT WORKTREE ALIASES
+# =============================================================================
+alias gwl="git worktree list"
+alias gwa="git worktree add"
+alias gwr="git worktree remove"
+alias gwp="git worktree prune"
+
+# Create worktree with new branch and cd into it
+# Usage: gwn feature-branch [../feature-branch]
+gwn() {
+  local branch="$1"
+  local path="${2:-../$branch}"
+  if [[ -z "$branch" ]]; then
+    echo "Usage: gwn <branch-name> [path]"
+    return 1
+  fi
+  git worktree add "$path" -b "$branch" && cd "$path" && ll
+}
+
+# Create worktree from existing branch and cd into it
+# Usage: gwe existing-branch [../existing-branch]
+gwe() {
+  local branch="$1"
+  local path="${2:-../$branch}"
+  if [[ -z "$branch" ]]; then
+    echo "Usage: gwe <branch-name> [path]"
+    return 1
+  fi
+  git worktree add "$path" "$branch" && cd "$path" && ll
+}
+
+# Fuzzy switch between worktrees
+gwf() {
+  local worktree
+  worktree=$(git worktree list | fzf --reverse --header='Switch Worktree' | awk '{print $1}')
+  if [[ -n "$worktree" ]]; then
+    cd "$worktree" && ll
+  fi
+}
+
+# =============================================================================
+# ADDITIONAL GIT ALIASES
+# =============================================================================
+alias glog="git log --graph --topo-order --pretty='%w(100,0,6)%C(yellow)%h%C(bold)%C(black)%d %C(cyan)%ar %C(green)%an%n%C(bold)%C(white)%s %N' --abbrev-commit"
+alias gco="git checkout"
+alias gb="git branch"
+alias gba="git branch -a"
+alias ga="git add"
+alias gap="git add -p"
+alias gca="git commit -a"
+alias gcm="git commit -m"
+alias gcp="git cherry-pick"
+alias grb="git rebase"
+alias gst="git stash"
+alias gstp="git stash pop"

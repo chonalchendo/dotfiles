@@ -17,7 +17,7 @@ require("lazy").setup({
   {import = "conal.plugins.lsp"},
 }, {
   install = {
-    colorscheme = { "nightfox" },
+    colorscheme = { "catppuccin" },
   },
   checker = {
     enabled = true,

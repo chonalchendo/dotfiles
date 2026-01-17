@@ -40,32 +40,7 @@ keymap.set("v", ">", ">gv")
 vim.api.nvim_set_keymap("n", "<C-_>", "gcc", { noremap = false })
 vim.api.nvim_set_keymap("v", "<C-_>", "gcc", { noremap = false })
 
--- barber
--- Move to previous/next
-keymap.set("n", "<A-,>", ":bprev<CR>")
-keymap.set("n", "<A-.>", ":bn<CR>")
--- Re-order to previous/next
-keymap.set("n", "<A-<>", "<Cmd>BufferMovePrevious<CR>")
-keymap.set("n", "<A->>", "<Cmd>BufferMoveNext<CR>")
--- Goto buffer in position...
-keymap.set("n", "<A-1>", "<Cmd>BufferGoto 1<CR>")
-keymap.set("n", "<A-2>", "<Cmd>BufferGoto 2<CR>")
-keymap.set("n", "<A-3>", "<Cmd>BufferGoto 3<CR>")
-keymap.set("n", "<A-4>", "<Cmd>BufferGoto 4<CR>")
-keymap.set("n", "<A-5>", "<Cmd>BufferGoto 5<CR>")
-keymap.set("n", "<A-6>", "<Cmd>BufferGoto 6<CR>")
-keymap.set("n", "<A-7>", "<Cmd>BufferGoto 7<CR>")
-keymap.set("n", "<A-8>", "<Cmd>BufferGoto 8<CR>")
-keymap.set("n", "<A-9>", "<Cmd>BufferGoto 9<CR>")
-keymap.set("n", "<A-0>", "<Cmd>BufferLast<CR>")
--- Pin/unpin buffer
-keymap.set("n", "<A-p>", "<Cmd>BufferPin<CR>")
--- Close buffer
-keymap.set("n", "<A-c>", "<Cmd>BufferClose<CR>")
-
--- copilot remap
-keymap.set("i", "<Right>", 'copilot#Accept("\\<CR>")', {
-	expr = true,
-	replace_keycodes = false,
-})
-vim.g.copilot_no_tab_map = true
+-- buffer navigation
+keymap.set("n", "<A-,>", ":bprev<CR>", { desc = "Previous buffer" })
+keymap.set("n", "<A-.>", ":bnext<CR>", { desc = "Next buffer" })
+keymap.set("n", "<A-c>", ":bdelete<CR>", { desc = "Close buffer" })

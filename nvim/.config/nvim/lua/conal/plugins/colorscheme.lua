@@ -45,6 +45,17 @@ return {
 				notify = false,
 				blink_cmp = true,
 				diffview = true,
+				harpoon = true,
+				illuminate = {
+					enabled = true,
+					lsp = false,
+				},
+				indent_blankline = {
+					enabled = true,
+					colored_indent_levels = false,
+				},
+				mason = true,
+				noice = true,
 				telescope = {
 					enabled = true,
 				},
