@@ -21,7 +21,7 @@ Consistent **Catppuccin Mocha** across all tools.
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/dotfiles.git ~/dotfiles
+git clone https://github.com/chonalchendo/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 
 # Install GNU Stow if not already installed
@@ -31,28 +31,61 @@ brew install stow
 stow wezterm tmux nvim zsh opencode
 
 # Install tmux plugins (after starting tmux)
-# Press: C-Space I
+# Press: ` then I
 ```
 
 ## Keybindings
 
-### tmux (Prefix: `C-Space`)
+### tmux (Prefix: `` ` `` backtick)
+
+The prefix key is the **backtick** (`` ` ``) - the key to the left of `1`. Press it, release, then press the action key.
+
+#### AI Agents
 
 | Keys | Action |
 |------|--------|
-| `a o` | New window with OpenCode |
-| `a c` | New window with Claude Code |
-| `a n` | New window with Neovim |
-| `a O` | Split right with OpenCode |
-| `a C` | Split right with Claude Code |
-| `a w` | Apply AI layout (60/40 split) |
-| `s` | Session switcher (fzf popup) |
-| `S` | New session prompt |
-| `/` | Split horizontal |
-| `-` | Split vertical |
-| `c` | New window |
-| `m` | Toggle zoom pane |
-| `h/j/k/l` | Resize panes |
+| `` ` `` → `o` | New window with OpenCode |
+| `` ` `` → `O` | Split right with OpenCode |
+| `` ` `` → `i` | New window with Claude Code |
+| `` ` `` → `I` | Split right with Claude Code |
+| `` ` `` → `n` | New window with Neovim |
+| `` ` `` → `p` | OpenCode popup (temporary) |
+| `` ` `` → `P` | Claude popup (temporary) |
+
+#### Window Navigation
+
+| Keys | Action |
+|------|--------|
+| `` ` `` → `h` | Previous window |
+| `` ` `` → `l` | Next window |
+| `` ` `` → `1-9` | Jump to window number |
+| `` ` `` → `Tab` | Toggle last window |
+| `` ` `` → `w` | Visual window picker |
+
+#### Window/Pane Management
+
+| Keys | Action |
+|------|--------|
+| `` ` `` → `c` | New window |
+| `` ` `` → `/` | Split horizontal |
+| `` ` `` → `-` | Split vertical |
+| `` ` `` → `m` | Toggle zoom pane |
+| `` ` `` → `j/k` | Resize pane down/up |
+
+#### Sessions
+
+| Keys | Action |
+|------|--------|
+| `` ` `` → `s` | Session switcher (fzf popup) |
+| `` ` `` → `S` | New session prompt |
+| `` ` `` → `X` | Kill session |
+
+#### Other
+
+| Keys | Action |
+|------|--------|
+| `` ` `` → `r` | Reload tmux config |
+| `` ` `` → `` ` `` | Type a literal backtick |
 
 ### Neovim (Leader: `Space`)
 
