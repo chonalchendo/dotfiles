@@ -129,7 +129,7 @@ USE_STARSHIP=true
 if [[ "$USE_STARSHIP" == "true" ]]; then
   # Starship - minimal, fast, modern
   eval "$(starship init zsh)"
-  export STARSHIP_CONFIG=~/.config/starship/starship.toml
+  # Config at default location: ~/.config/starship.toml
 else
   # Powerlevel10k - feature-rich, customizable
   # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
