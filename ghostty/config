@@ -1,0 +1,104 @@
+# =============================================================================
+# FONT
+# =============================================================================
+font-family                    = GeistMono Nerd Font Mono
+font-style                     = Bold
+font-size                      = 13
+
+# =============================================================================
+# PERFORMANCE
+# =============================================================================
+window-vsync                   = true
+
+# =============================================================================
+# APPEARANCE
+# =============================================================================
+# Catppuccin Mocha theme for consistency across all tools
+theme                          = Catppuccin Mocha
+
+# Window styling
+macos-titlebar-style           = hidden
+background-opacity             = 0.88
+background-blur                = true
+cursor-style                   = bar
+cursor-style-blink             = true
+mouse-hide-while-typing        = true
+unfocused-split-opacity        = 0.9
+selection-background           = #45475a
+window-colorspace              = display-p3
+focus-follows-mouse            = true
+
+# Disable Ghostty tabs - tmux handles all window management
+window-show-tab-bar            = never
+
+# Padding (matches wezterm: left=5, right=5, top=10, bottom=5)
+window-padding-x               = 5
+window-padding-y               = 10,5
+
+# =============================================================================
+# SHELL
+# =============================================================================
+shell-integration              = zsh
+shell-integration-features     = cursor,sudo,title,ssh-env,ssh-terminfo
+
+# =============================================================================
+# TMUX INTEGRATION
+# =============================================================================
+# Auto-start tmux on launch, attach to existing 'main' session or create new
+command                        = /opt/homebrew/bin/tmux new-session -A -s main
+
+# =============================================================================
+# CLIPBOARD
+# =============================================================================
+clipboard-paste-protection     = true
+clipboard-trim-trailing-spaces = true
+copy-on-select                 = true
+
+# =============================================================================
+# SCROLLBACK
+# =============================================================================
+scrollback-limit               = 10000
+
+# =============================================================================
+# MACOS
+# =============================================================================
+macos-auto-secure-input        = true
+macos-secure-input-indication  = true
+macos-option-as-alt            = true
+
+# =============================================================================
+# KEYBINDINGS
+# =============================================================================
+# Cmd+k to clear scrollback (useful for long agent outputs)
+keybind                        = super+k=clear_screen
+
+# Cmd+n for new Ghostty window (separate tmux session context)
+keybind                        = super+n=new_window
+
+# Cmd+w to close current surface (matches macOS convention)
+keybind                        = super+w=close_surface
+
+# Cmd+Left/Right for beginning/end of line
+keybind                        = super+left=text:\x01
+keybind                        = super+right=text:\x05
+
+# Option+Left/Right for word jumping (Alt+b / Alt+f)
+keybind                        = alt+left=text:\x1bb
+keybind                        = alt+right=text:\x1bf
+
+# Jump between prompts in scrollback (requires shell integration)
+keybind                        = super+up=jump_to_prompt:-1
+keybind                        = super+down=jump_to_prompt:1
+
+# Reload config
+keybind                        = super+shift+r=reload_config
+
+# =============================================================================
+# QUICK TERMINAL
+# =============================================================================
+# Global dropdown terminal accessible from any app (requires accessibility perms)
+keybind                        = global:super+grave_accent=toggle_quick_terminal
+quick-terminal-position        = bottom
+quick-terminal-screen          = main
+quick-terminal-animation-duration = 200
+quick-terminal-autohide        = true
