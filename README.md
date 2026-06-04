@@ -71,15 +71,19 @@ agent needs your attention. Config lives at `cmux/.config/cmux/cmux.json` (stowe
 
 | Keys | Action |
 |------|--------|
-| `⌃` + `Tab` / `⌃⇧` + `Tab` | Next / previous session (surface) |
-| `⌃` + `1`–`8` | Jump to session 1–8 (`⌃9` = last) |
-| `⌘` + `1`–`8` | Jump to workspace 1–8 (`⌘9` = last) |
+| `⌘` + `P` | Workspace switcher (fuzzy picker) |
+| `⌘` + `1`–`9` | Jump to workspace 1–9 |
 | `⌃⌘` + `]` / `[` | Next / previous workspace |
-| `⌥⌘` + `←→↑↓` | Focus split pane directionally |
-| `⌘` + `T` / `⌘` + `N` | New terminal / new workspace |
+| `⌘` + `N` | New workspace |
+| `⌘` + `B` / `⌘⌥` + `B` | Toggle left / right sidebar |
+| `⌘` + `T` | New surface (terminal tab within workspace) |
+| `⌘⇧` + `]` / `[` | Next / previous surface |
+| `⌃` + `1`–`9` | Jump to surface 1–9 |
 | `⌘` + `D` / `⌘⇧` + `D` | Split right / down |
-| `⌘⇧` + `U` | Jump to latest agent needing input |
-| `⌘` + `I` | Show notification panel |
+| `⌥⌘` + `←→↑↓` | Focus split pane directionally |
+| `⌘⇧` + `↩` | Toggle pane zoom |
+| `⌘` + `I` | Show notifications |
+| `⌘⇧` + `U` | Jump to latest unread (agent needing attention) |
 
 **Claude Code notifications** are enabled via `automation.claudeCodeIntegration` in
 `cmux.json` — cmux's Claude wrapper injects the notification hooks automatically when you

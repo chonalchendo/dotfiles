@@ -18,8 +18,8 @@ theme                          = Catppuccin Mocha
 
 # Window styling
 macos-titlebar-style           = hidden
-background-opacity             = 0.88
-background-blur                = true
+background-opacity             = 1.0
+background-blur                = false
 cursor-style                   = bar
 cursor-style-blink             = true
 mouse-hide-while-typing        = true
@@ -44,8 +44,11 @@ shell-integration-features     = cursor,sudo,title,ssh-env,ssh-terminfo
 # =============================================================================
 # TMUX INTEGRATION
 # =============================================================================
-# Auto-start tmux on launch, attach to existing 'main' session or create new
-command                        = /opt/homebrew/bin/tmux new-session -A -s main
+# tmux auto-start is intentionally NOT set here. cmux (the AI-agent terminal)
+# reads this same Ghostty config, so a `command = tmux ...` here makes EVERY cmux
+# pane attach to the one shared "main" session — every workspace shows identical
+# content. Instead, tmux auto-starts from ~/.zshrc, scoped to standalone Ghostty
+# only (via $__CFBundleIdentifier), so cmux panes get their own independent shell.
 
 # =============================================================================
 # CLIPBOARD

@@ -7,6 +7,19 @@ if [[ "$USE_STARSHIP" != "true" ]] && [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# =============================================================================
+# TMUX AUTO-START (standalone Ghostty only)
+# =============================================================================
+# Auto-attach/create the "main" tmux session, but ONLY in standalone Ghostty.
+# cmux shares ~/.config/ghostty/config and injects CMUX_* env vars; if tmux
+# started here too, every cmux pane would attach to the same "main" session and
+# every workspace would show identical content. Guards:
+#   -z $TMUX                         -> don't nest tmux inside tmux
+#   __CFBundleIdentifier == ghostty  -> standalone Ghostty only (cmux = com.cmuxterm.app)
+if [[ -z "$TMUX" && "$__CFBundleIdentifier" == "com.mitchellh.ghostty" ]]; then
+  exec /opt/homebrew/bin/tmux new-session -A -s main
+fi
+
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
