@@ -33,6 +33,9 @@ brew install --cask cmux
 
 # Stow all configs
 stow wezterm tmux nvim zsh opencode starship cmux
+# ghostty uses --no-folding so ~/.config/ghostty stays a real dir with files
+# symlinked individually (cmux shares this config dir)
+stow --no-folding ghostty
 
 # Install tmux plugins (after starting tmux)
 # Press: ` then I
@@ -246,6 +249,7 @@ The prefix key is the **backtick** (`` ` ``) - the key to the left of `1`. Press
 ```
 dotfiles/
 ├── wezterm/.wezterm.lua
+├── ghostty/.config/ghostty/config
 ├── cmux/.config/cmux/cmux.json
 ├── tmux/.tmux.conf
 ├── nvim/.config/nvim/
