@@ -7,18 +7,8 @@ if [[ "$USE_STARSHIP" != "true" ]] && [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# If you come from bash you might have to change your $PATH.z# export 
-export PATH="/opt/homebrew/bin:$PATH"
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-
-# Homebrew
-eval "$(/opt/homebrew/bin/brew shellenv)"
-
-# Homebrew: Python
-export PATH="$(brew --prefix)/opt/python@3/libexec/bin:$PATH"
-
-eval "$(pyenv init --path)"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -140,19 +130,17 @@ else
   source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
 fi
 
-alias python=/Users/conal/.pyenv/shims/python3
-alias pip=/Users/conal/.pyenv/shims/pip3
-
+# Pyenv (PYENV_ROOT and PATH set in .zprofile for login shells)
 export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+command -v pyenv >/dev/null && eval "$(pyenv init -)"
 
 alias ls="eza --color=always --long --no-filesize --icons=always --no-time --no-user --no-permissions"
 
 
-alias cd="z"
-
 eval "$(zoxide init zsh)"
+
+alias cd="z"
 
 . "$HOME/.local/bin/env"
 
@@ -321,6 +309,33 @@ kill-agents() {
   echo "Done."
 }
 
+# Overnight agent mode: keep the Mac awake so cmux/Claude sessions keep
+# running with the laptop lid closed. macOS sleep suspends ALL local
+# processes, so this is required for unattended overnight runs.
+# Usage: cc-night [on|off|status]  (defaults to status)
+cc-night() {
+  local action="${1:-status}"
+  case "$action" in
+    on)
+      if pmset -g batt | grep -q "Battery Power"; then
+        echo "⚠️  On battery — plug in before enabling. Lid-closed + no sleep will overheat/drain."
+        return 1
+      fi
+      sudo pmset -c disablesleep 1 && \
+        echo "🌙 Overnight mode ON. Lid can stay closed while on power. Run 'cc-night off' when done."
+      ;;
+    off)
+      sudo pmset -c disablesleep 0 && \
+        echo "☀️  Overnight mode OFF. Normal sleep restored."
+      ;;
+    status|*)
+      local state
+      state=$(pmset -g | grep -E "^ *disablesleep" | awk '{print $2}')
+      echo "Overnight mode (disablesleep): ${state:-0}  |  $(pmset -g batt | grep -oE "'.*'" | tr -d "'")"
+      ;;
+  esac
+}
+
 # Dotfiles management
 dots() {
   cd ~/dotfiles && nvim
@@ -432,3 +447,13 @@ alias gcp="git cherry-pick"
 alias grb="git rebase"
 alias gst="git stash"
 alias gstp="git stash pop"
+
+# bun completions
+[ -s "/Users/conal/.bun/_bun" ] && source "/Users/conal/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# Machine-local secrets / overrides (untracked, not in dotfiles repo)
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
