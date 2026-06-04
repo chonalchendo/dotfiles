@@ -7,6 +7,17 @@
     "suppressSubagentNotifications": true
   },
 
+  "shortcuts": {
+    "bindings": {
+      "splitRight": "ctrl+/",
+      "splitDown": "ctrl+-",
+      "focusLeft": "ctrl+h",
+      "focusRight": "ctrl+l",
+      "focusDown": "ctrl+j",
+      "focusUp": "ctrl+k"
+    }
+  },
+
   "notifications": {
     "dockBadge": true,
     "showInMenuBar": true,
