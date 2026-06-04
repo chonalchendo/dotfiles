@@ -17,3 +17,6 @@ tmux/.tmux/
 # ZSH cache
 zsh/.zcompdump*
 zsh/.zsh_history
+
+# opencode dependencies (track package.json + bun.lock; restore with `bun install`)
+opencode/.config/opencode/node_modules/
