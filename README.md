@@ -9,6 +9,7 @@ This setup is optimized for running multiple AI coding agents (OpenCode, Claude 
 ### Tools
 
 - **WezTerm** - Terminal emulator (minimal config, tmux handles everything)
+- **cmux** - Native macOS terminal for parallel AI agents (vertical tabs + attention notifications)
 - **tmux** - Session/window management with AI-specific keybindings
 - **Neovim** - Editor with LSP, Telescope, and AI integration
 - **Zsh** - Shell with Starship prompt (or Powerlevel10k)
@@ -28,9 +29,10 @@ cd ~/dotfiles
 
 # Install dependencies
 brew install stow atuin direnv starship fzf zoxide eza bat fd
+brew install --cask cmux
 
 # Stow all configs
-stow wezterm tmux nvim zsh opencode starship
+stow wezterm tmux nvim zsh opencode starship cmux
 
 # Install tmux plugins (after starting tmux)
 # Press: ` then I
@@ -59,6 +61,30 @@ USE_STARSHIP=false
 ```
 
 ## Keybindings
+
+### cmux (native macOS app, ⌘/⌃ chords)
+
+cmux runs many AI agents as vertical sidebar tabs instead of tiled tmux panes, so 8+ Claude
+Code sessions no longer clutter one window. Panes get a **blue ring** and tabs badge when an
+agent needs your attention. Config lives at `cmux/.config/cmux/cmux.json` (stowed to
+`~/.config/cmux/cmux.json`); reload with `cmux reload-config`.
+
+| Keys | Action |
+|------|--------|
+| `⌃` + `Tab` / `⌃⇧` + `Tab` | Next / previous session (surface) |
+| `⌃` + `1`–`8` | Jump to session 1–8 (`⌃9` = last) |
+| `⌘` + `1`–`8` | Jump to workspace 1–8 (`⌘9` = last) |
+| `⌃⌘` + `]` / `[` | Next / previous workspace |
+| `⌥⌘` + `←→↑↓` | Focus split pane directionally |
+| `⌘` + `T` / `⌘` + `N` | New terminal / new workspace |
+| `⌘` + `D` / `⌘⇧` + `D` | Split right / down |
+| `⌘⇧` + `U` | Jump to latest agent needing input |
+| `⌘` + `I` | Show notification panel |
+
+**Claude Code notifications** are enabled via `automation.claudeCodeIntegration` in
+`cmux.json` — cmux's Claude wrapper injects the notification hooks automatically when you
+launch `claude` inside a cmux terminal (no `~/.claude/settings.json` changes needed). Run
+`cmux claude-teams` to launch Claude with a tmux→cmux shim so its splits become cmux panes.
 
 ### tmux (Prefix: `` ` `` backtick)
 
@@ -183,6 +209,7 @@ The prefix key is the **backtick** (`` ` ``) - the key to the left of `1`. Press
 | `agents` | List running agent windows |
 | `proj [name]` | Switch to project session |
 | `kill-agents` | Kill all agent windows |
+| `cc-night [on\|off\|status]` | Keep Mac awake (lid closed) for overnight cmux/Claude runs |
 | `dots` | Open dotfiles in nvim |
 | `oc` | OpenCode alias |
 | `cc` | Claude Code alias |
@@ -215,6 +242,7 @@ The prefix key is the **backtick** (`` ` ``) - the key to the left of `1`. Press
 ```
 dotfiles/
 ├── wezterm/.wezterm.lua
+├── cmux/.config/cmux/cmux.json
 ├── tmux/.tmux.conf
 ├── nvim/.config/nvim/
 ├── zsh/.zshrc

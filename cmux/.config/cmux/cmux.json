@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/manaflow-ai/cmux/main/web/data/cmux.schema.json",
+  "schemaVersion": 1,
+
+  "automation": {
+    "claudeCodeIntegration": true,
+    "suppressSubagentNotifications": true
+  },
+
+  "notifications": {
+    "dockBadge": true,
+    "showInMenuBar": true,
+    "unreadPaneRing": true,
+    "paneFlash": true,
+    "sound": "Glass"
+  },
+
+  "terminal": {
+    "autoResumeAgentSessions": true,
+    "agentHibernation": {
+      "enabled": false
+    }
+  }
+}
